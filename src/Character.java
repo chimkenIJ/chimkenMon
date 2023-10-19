@@ -1,7 +1,7 @@
 import processing.core.PApplet;
 
 public class Character {
-    protected double x, y, xSpeed, ySpeed;
+    public double x, y, xSpeed, ySpeed;
     protected int hp, maxHP;
     protected boolean alive;
 
@@ -35,7 +35,8 @@ public class Character {
     }
 
     public Bullet ability1(Character current) {
-        return null;
+        Bullet bullet = new Bullet(current.getX(), current.getY(), 10, 10) ;
+        return bullet;
     }
 
     public void ability2(Character current) {
