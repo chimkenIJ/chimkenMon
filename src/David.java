@@ -7,8 +7,7 @@ public class David extends Character {
     }
 
     public Bullet ability1(Character current) {
-        Bullet shield = new Bullet(current.getX(), current.getY(), 4, 3) ;
-        return shield;
+        return new Bullet(current.getX(), current.getY(), 4, 3);
     }
 
     public void drawCharacater(PApplet game) {

@@ -12,16 +12,18 @@ public class Game extends PApplet {
     int height = 800;
     double currentX;
     double currentY;
+    int numChickens;
     ArrayList<Bullet> bList = new ArrayList<>();
+    ArrayList<Chicken> cList = new ArrayList<>();
     Character michael = new Michael(100, 200, 4, 3, 100);
     Character leo = new Leo(100, 200, 4, 4, 100);
     Character finn = new Finn(100, 200, 3, 2, 130);
     Character david = new David(100, 200, 4, 3, 140);
     Character current = new Character(100, 200, 0, 0, 0);
 
-    Bullet bullet = new Bullet(0, 0, 3, 4);
 
-    Boss boss = new Boss(400, 500, (int) (Math.random() * 11 - 5), (int) (Math.random() * 11 - 5), 10000);
+    //Boss boss = new Boss(400, 500, (int) (Math.random() * 11 - 5), (int) (Math.random() * 11 - 5), 10000);
+    Boss boss = new Boss(400, 500, 3, 1, 10000);
 
     public void settings() {
         size(width, height);   // set the window size
@@ -34,6 +36,7 @@ public class Game extends PApplet {
         bg.resize(width, height);
         current = michael;
 
+
     }
 
     /***
@@ -41,11 +44,15 @@ public class Game extends PApplet {
      * tick each object (have it update itself), and draw each object
      */
     public void draw() {
+
         background(bg);
         decideCurrent(keyPressed, key);
         current.move(keyPressed, key);
         current.drawCharacater(this);
         boss.drawBoss(this);
+        boss.move();
+        text("Boss Health: " + boss.getHP(), 100,100);
+        text("Character Health: " + current.getHP(), 800,100);
 
         if (keyPressed) {
             if (key == 'p') {
@@ -53,7 +60,6 @@ public class Game extends PApplet {
                 doAbility(current);
             }
         }
-
         for (int i = 0; i < bList.size(); i++) {
             Bullet b = bList.get(i);
             if (b != null) {
@@ -63,10 +69,48 @@ public class Game extends PApplet {
                     bList.remove(b);
                     i--;
                 }
+                if (boss.collide(b)) {
+                    bList.remove(b);
+                    i--;
+                    boss.loseHP(1);
+                }
             }
-
         }
 
+
+        if (Math.random()<=0.02) {
+            createChickens();}
+                    for (int j = 0; j < cList.size(); j++) {
+                        Chicken c = cList.get(j);
+                        if (c != null) {
+                            c.drawChicken(this);
+                            c.move();
+
+                            if (c.removeFromList()) {
+                                cList.remove(c);
+
+                                j--;
+
+                            }
+                            if (current.collide(c)) {
+                                cList.remove(c);
+
+                                j--;
+                                current.loseHP(1);
+                            }
+                        }
+                    }
+                }
+
+
+
+
+    private void createChickens() {
+        int swarmCount = (int)(Math.random()*5)+10;
+        for (int i = 0; i < swarmCount; i++) {
+            Chicken newC = new Chicken(boss.getX(), boss.getY()+50,-2,-2);
+            cList.add(newC);
+        }
     }
 
     private void doAbility(Character current) {

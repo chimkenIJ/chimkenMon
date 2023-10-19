@@ -11,11 +11,18 @@ public class Boss {
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.maxHP = maxHP;
+        hp = maxHP;
+    }
+
+    public double getX() {
+        return this.x;
+    }public double getY() {
+        return this.y;
     }
 
     public void drawBoss(PApplet game) {
         game.fill(255, 255, 0);
-        game.rect((float)x,(float)y,100,100);
+        game.rect((float) x, (float) y, 100, 100);
     }
 
     public void ability1() {
@@ -31,22 +38,37 @@ public class Boss {
     }
 
     public boolean collide(Bullet bullet) {
-        return false;
-    } public boolean collide(Character character) {
+
+        if ((bullet.getX() + bullet.getimageWidth() >= this.x) && (bullet.getX() <= this.x + 100)) {
+
+            return (bullet.getY() + bullet.getimageHeight() >= this.y) && (bullet.getY() <= this.y + 100);
+        }
         return false;
     }
 
-    public void move(int x, int y) {
+    public boolean collide(Character character) {
+        return false;
+    }
+
+    public void move() {
+        if (x >= 700 || x<=300) {
+            xSpeed *= -1;
+            ySpeed *= -1;
+        }
         x+=xSpeed;
         y+=ySpeed;
     }
 
-    public void loseHP (int hpLost) {
-
+    public void loseHP(int hpLost) {
+        hp -= hpLost;
     }
 
     public void gainHP(int hpGain) {
         //if max = health, don't gain
+    }
+
+    public int getHP() {
+        return hp;
     }
 }
 

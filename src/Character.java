@@ -11,6 +11,7 @@ public class Character {
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.maxHP = maxHP;
+        hp = maxHP;
     }
 
     public void drawCharacater(PApplet game) {
@@ -24,29 +25,29 @@ public class Character {
         return this.y;
     }
 
-    public boolean collide(chicken bullet) {
-        //chicken wave
+    public boolean collide(Chicken bullet) {
+
+        if ((bullet.getX() + bullet.getimageWidth() >= this.x) && (bullet.getX() <= this.x + 10)) {
+
+            return (bullet.getY() + bullet.getimageHeight() >= this.y) && (bullet.getY() <= this.y + 100);
+        }
         return false;
     }
 
-    public boolean collide(Boss chicken) {
+    public boolean collide(Character boss) {
         //punch
         return false;
     }
 
     public Bullet ability1(Character current) {
-        Bullet bullet = new Bullet(current.getX(), current.getY(), 10, 10) ;
-        return bullet;
+        return new Bullet(current.getX(), current.getY(), 10, 10);
     }
 
     public void ability2(Character current) {
 
     }
 
-    public void boundary(double bossX, double bossY) {
-        if (this.x >= bossX && x <= bossX + 100) {
-        }
-    }
+
 
     public void move(boolean keyPressed, int key) {
         if (keyPressed) {
@@ -72,12 +73,17 @@ public class Character {
 
 
     public void loseHP(int hpLost) {
-        //health--
+        hp -= hpLost;
     }
 
     public void gainHP(int hpGain) {
         //if max = health, don't gain
     }
+    public int getHP() {
+        return hp;
+    }
+
+
 }
 
 
