@@ -1,7 +1,7 @@
 import processing.core.PApplet;
 
 public class Character {
-    public double x, y, xSpeed, ySpeed;
+    protected double x, y, xSpeed, ySpeed;
     protected int hp, maxHP;
     protected boolean alive;
 

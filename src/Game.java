@@ -8,6 +8,7 @@ public class Game extends PApplet {
     // TODO: declare game variables
     PImage bg;
     int width = 1000;
+    boolean pBoolean;
     int height = 800;
     double currentX;
     double currentY;
@@ -31,7 +32,7 @@ public class Game extends PApplet {
         // TODO: initialize game variables
         bg = loadImage("01-Isometric-Dungeon-Preview-05.jpg");
         bg.resize(width, height);
-
+        current = michael;
 
     }
 
@@ -43,18 +44,16 @@ public class Game extends PApplet {
         background(bg);
         decideCurrent(keyPressed, key);
         current.move(keyPressed, key);
-        fill(255, 0, 0);
         current.drawCharacater(this);
-        fill(255, 255, 0);
         boss.drawBoss(this);
 
         if (keyPressed) {
-            if (key == 'p' || key == 'o') {
+            if (key == 'p') {
+                pBoolean = true;
                 doAbility(current);
             }
         }
 
-        fill(0, 255, 0);
         for (int i = 0; i < bList.size(); i++) {
             Bullet b = bList.get(i);
             if (b != null) {
@@ -62,7 +61,6 @@ public class Game extends PApplet {
                 b.move(this);
                 if (b.removeFromList()) {
                     bList.remove(b);
-                    System.out.println("removed");
                     i--;
                 }
             }
@@ -73,12 +71,25 @@ public class Game extends PApplet {
 
     private void doAbility(Character current) {
         Bullet cBullet;
+        /*while (pBoolean) {
+            if (!pBoolean) {
+                System.out.println("in");
+                cBullet = current.ability1(current);
 
+                bList.add(cBullet);
+            }
+            System.out.println("0");
+        }*/
         if (key == 'p') {
+
             cBullet = current.ability1(current);
-            System.out.println(current.x);
             bList.add(cBullet);
-            System.out.println("added!!");
+        }
+    }
+
+    public void keyReleased() {
+        if (key == 'p') {
+            pBoolean = false;
         }
     }
 

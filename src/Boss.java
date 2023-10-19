@@ -14,6 +14,7 @@ public class Boss {
     }
 
     public void drawBoss(PApplet game) {
+        game.fill(255, 255, 0);
         game.rect((float)x,(float)y,100,100);
     }
 
