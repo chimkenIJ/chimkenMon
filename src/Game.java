@@ -9,20 +9,17 @@ public class Game extends PApplet {
     PImage bg;
     int width = 1000;
     boolean pBoolean;
+    boolean lBoolean;
     int height = 800;
-    double currentX;
-    double currentY;
-    int numChickens;
+    int time = 0;
     ArrayList<Bullet> bList = new ArrayList<>();
     ArrayList<Chicken> cList = new ArrayList<>();
-    Character michael = new Michael(100, 200, 4, 3, 100);
-    Character leo = new Leo(100, 200, 4, 4, 100);
-    Character finn = new Finn(100, 200, 3, 2, 130);
-    Character david = new David(100, 200, 4, 3, 140);
-    Character current = new Character(100, 200, 0, 0, 0);
+    Character michael = new Michael((float) width / 2, height, 12, 9, 100, 0);
+    Character leo = new Leo((float) width / 2, height, 12, 9, 100, 0);
+    Character finn = new Finn((float) width / 2, height, 12, 92, 130, 0);
+    Character david = new David((float) width / 2, height, 12, 9, 140, 0);
+    Character current = new Character((float) width / 2, height-100, 0, 0, 0, 0);
 
-
-    //Boss boss = new Boss(400, 500, (int) (Math.random() * 11 - 5), (int) (Math.random() * 11 - 5), 10000);
     Boss boss = new Boss(400, 500, 3, 1, 10000);
 
     public void settings() {
@@ -35,8 +32,6 @@ public class Game extends PApplet {
         bg = loadImage("01-Isometric-Dungeon-Preview-05.jpg");
         bg.resize(width, height);
         current = michael;
-
-
     }
 
     /***
@@ -46,25 +41,19 @@ public class Game extends PApplet {
     public void draw() {
 
         background(bg);
-        decideCurrent(keyPressed, key);
-        current.move(keyPressed, key);
-        current.drawCharacater(this);
+        ifKeyPressed(keyPressed, key);
+        // current.move(keyPressed, key);
+        current.drawCharacter(this);
         boss.drawBoss(this);
         boss.move();
-        text("Boss Health: " + boss.getHP(), 100,100);
-        text("Character Health: " + current.getHP(), 800,100);
+        text("Boss Health: " + boss.getHP(), 100, 100);
+        text("Character Health: " + current.getHP(), 800, 100);
 
-        if (keyPressed) {
-            if (key == 'p') {
-                pBoolean = true;
-                doAbility(current);
-            }
-        }
         for (int i = 0; i < bList.size(); i++) {
             Bullet b = bList.get(i);
             if (b != null) {
                 b.drawBullet(this);
-                b.move(this);
+                b.move();
                 if (b.removeFromList()) {
                     bList.remove(b);
                     i--;
@@ -76,69 +65,88 @@ public class Game extends PApplet {
                 }
             }
         }
+        if (Math.random() <= 0.02) {
+            createChickens();
+        }
+        for (int j = 0; j < cList.size(); j++) {
+            Chicken c = cList.get(j);
+            if (c != null) {
+                c.drawChicken(this);
+                c.move();
 
+                if (c.removeFromList()) {
+                    cList.remove(c);
 
-        if (Math.random()<=0.02) {
-            createChickens();}
-                    for (int j = 0; j < cList.size(); j++) {
-                        Chicken c = cList.get(j);
-                        if (c != null) {
-                            c.drawChicken(this);
-                            c.move();
+                    j--;
 
-                            if (c.removeFromList()) {
-                                cList.remove(c);
-
-                                j--;
-
-                            }
-                            if (current.collide(c)) {
-                                cList.remove(c);
-
-                                j--;
-                                current.loseHP(1);
-                            }
+                }
+                if (current.collide(c)) {
+                    cList.remove(c);
+                    j--;
+                    if (current.equals(david)) {
+                        if (david.getSpecial() == 1) {
+                            david.setSpecial(0);
                         }
+
+                    } else {
+                        current.loseHP(1);
                     }
                 }
+            }
+        }
 
-
+        System.out.println(height - current.getY(time, height));
+    }
 
 
     private void createChickens() {
-        int swarmCount = (int)(Math.random()*5)+10;
+        int swarmCount = (int) (Math.random() * 5) + 10;
         for (int i = 0; i < swarmCount; i++) {
-            Chicken newC = new Chicken(boss.getX(), boss.getY()+50,-2,-2);
+            int xSpeed;
+            int ySpeed;
+            int xDirection = (int) (Math.random() * 2);
+            int yDirection = (int) (Math.random() * 2);
+            if (xDirection == 0) {
+                xSpeed = -2;
+            } else xSpeed = 2;
+            if (yDirection == 0) {
+                ySpeed = -2;
+            } else ySpeed = 2;
+
+            Chicken newC = new Chicken(boss.getX(), boss.getY() + 50, xSpeed, ySpeed);
             cList.add(newC);
         }
     }
 
+
     private void doAbility(Character current) {
         Bullet cBullet;
-        /*while (pBoolean) {
-            if (!pBoolean) {
-                System.out.println("in");
-                cBullet = current.ability1(current);
-
-                bList.add(cBullet);
-            }
-            System.out.println("0");
-        }*/
-        if (key == 'p') {
-
-            cBullet = current.ability1(current);
+        if (pBoolean) {
+            cBullet = current.ability1(current, time, width, height, keyPressed, key);
             bList.add(cBullet);
+            pBoolean = false;
+        }
+        if (lBoolean) {
+            if (current.ability2(current, boss, time, width, height)) {
+                lBoolean = false;
+                boss.loseHP(2);
+            }
         }
     }
 
     public void keyReleased() {
         if (key == 'p') {
-            pBoolean = false;
+            pBoolean = true;
+            doAbility(current);
+        }
+        if (key == 'l') {
+            lBoolean = true;
+            doAbility(current);
         }
     }
 
 
-    private void decideCurrent(boolean keyPressed, int key) {
+    private void ifKeyPressed(boolean keyPressed, int key) {
         if (keyPressed) {
             if (key == '1') {
                 current = michael;
@@ -152,8 +160,30 @@ public class Game extends PApplet {
             if (key == '4') {
                 current = david;
             }
-            currentX = current.getX();
-            currentY = current.getY();
+            if (key == 'a') {
+                if (!(current.getX(time, width) < 50)) {
+                    time++;
+                }
+            }
+            if (key == 'd') {
+                if (!(current.getX(time, width) > width - 50)) {
+                    time--;
+                }
+            }
+            if (key == 'w') {
+                if (current.getupDown() <=700 && current.getupDown()>300) {
+                    // if (current.getY(time, height) < height - 500 && current.getY(time, height) > height - 100) {
+                    current.setupDown(-10);
+                    // }
+                }
+            }
+            if (key == 's') {
+                if (current.getupDown() >300 && current.getupDown()<=700) {
+                    //if (current.getY(time, height) < height - 500 && current.getY(time, height) > height - 100) {
+                    current.setupDown(10);
+                    // }
+                }
+            }
         }
     }
 
@@ -162,4 +192,3 @@ public class Game extends PApplet {
         PApplet.main("Game");
     }
 }
-

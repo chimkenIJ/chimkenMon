@@ -11,10 +11,20 @@ public class Bullet {
         this.ySpeed = ySpeed;
 
     }
-    public void move(PApplet game){
+    public void move(){
+
         x+=xSpeed;
         y+=ySpeed;
     }
+  /* public void move(Boss boss ){
+       double xDiff = (boss.getX() - x);
+       double yDiff = (boss.getY() - y);
+       xSpeed = x + xDiff / 10000;
+       ySpeed = y + yDiff / 100000;
+       x+=xSpeed;
+       y+=ySpeed;
+   }*/
+
     public boolean removeFromList(){
         if (x+imageWidth>width || x<0 || y+imageHeight>height || y<0) {
             return true;
@@ -40,4 +50,3 @@ public class Bullet {
 
 
 }
-
