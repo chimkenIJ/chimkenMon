@@ -6,6 +6,7 @@ public class Character {
     protected int hp, maxHP;
     protected boolean alive;
     protected int special;
+    protected static int frameRate = 60;
 
     public Character(double x, double y, double xSpeed, double ySpeed, int maxHP, int special) {
         this.x = x;
@@ -25,13 +26,13 @@ public class Character {
 
     protected double getX(int time, int width) {
 
-        x = ((double) width / 2 )+ upDown * Math.cos((double) time / (2 * Math.PI));
+        x = ((double) width / 2) + upDown * Math.cos((double) time / (2 * Math.PI));
         return x;
 
     }
 
     protected double getY(int time, int height) {
-        y = ((double) height / 2)-200 + upDown * Math.sin((double) time / (Math.PI * 2));
+        y = ((double) height / 2) - 200 + (upDown * Math.sin((double) time / (Math.PI * 2)));
         return y;
 
     }
@@ -48,6 +49,7 @@ public class Character {
     public void setSpecial(int newSpecial) {
         this.special = newSpecial;
     }
+
     public int getSpecial() {
         return this.special;
     }
@@ -62,26 +64,40 @@ public class Character {
         return false;
     }
 
-    public boolean collide(Boss boss, Character current, int time, int width, int height) {
-        double bossX= boss.getX();
-        double charX=current.getX(time,width);
-        double bossY= boss.getY();
-        double charY=current.getY(time,height);
-        if (bossX<=charX && bossX+100>= charX && bossY<=charY && bossY+100>=charY){
+    public boolean collide(Boss boss, int time, int width, int height) {
+        double bossX = boss.getX();
+        double charX = this.getX(time, width);
+        double bossY = boss.getY();
+        double charY = this.getY(time, height);
+        if (bossX <= charX && bossX + 100 >= charX && bossY <= charY && bossY + 100 >= charY) {
             return true;
         }
         return false;
     }
 
-    public Bullet ability1(Character current, int time, int width, int height, boolean keyPressed, int key) {
-        return new Bullet(current.getX(time, width), current.getY(time, height), 10, 10);
+    public Bullet ability1(int time, int width, int height, boolean keyPressed, int key) {
+        return new Bullet(this.getX(time, width), this.getY(time, height), 10, 10);
     }
 
-    public boolean ability2(Character current, Boss boss, int time, int width, int height) {
-        if (current.collide(boss, current, time, width, height)){
-            return true;
+    public boolean ability2(String current, Boss boss, int time, int width, int height, int coolDown, boolean done) {
+        if (current.equals("michael") || current.equals("leo")) {
+            if (this.collide(boss, time, width, height)) {
+                return true;
+            }
+        } else if (current.equals("finn")) {
+            if (coolDown > (frameRate * 30)) {
+                this.special = 1;
+                return true;
+            }
+        } else if (current.equals("david")) {
+            if (!done) {
+                if (coolDown >= (frameRate * 30)) {
+                    this.special = 1;
+                    return true;
+                }
+            }
         }
-        else return false;
+        return false;
     }
 
 
@@ -113,7 +129,9 @@ public class Character {
     }
 
     public void gainHP(int hpGain) {
-        //if max = health, don't gain
+        if (!((hpGain + this.hp) > this.maxHP)) {
+            this.hp += hpGain;
+        }
     }
 
     public int getHP() {
@@ -122,7 +140,9 @@ public class Character {
 
 
     public void setupDown(int incrDecr) {
-        this.upDown+=incrDecr;
+        if (upDown + incrDecr > 0) {
+            this.upDown += incrDecr;
+        }
     }
 
     public int getupDown() {

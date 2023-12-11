@@ -11,4 +11,7 @@ public class Leo extends Character{
         game.rect((float) x, (float) y, 10, 100);
 
     }
+    public String toString() {
+        return "leo";
+    }
 }

@@ -11,14 +11,16 @@ public class Game extends PApplet {
     boolean pBoolean;
     boolean lBoolean;
     int height = 800;
-    int time = 0;
+    int time = 2;
+    int coolDown = 15*30;
+    boolean done = true;
     ArrayList<Bullet> bList = new ArrayList<>();
     ArrayList<Chicken> cList = new ArrayList<>();
-    Character michael = new Michael((float) width / 2, height, 12, 9, 100, 0);
+    Character michael = new Michael((float) (width-100), height-100, 12, 9, 100, 0);
     Character leo = new Leo((float) width / 2, height, 12, 9, 100, 0);
     Character finn = new Finn((float) width / 2, height, 12, 92, 130, 0);
     Character david = new David((float) width / 2, height, 12, 9, 140, 0);
-    Character current = new Character((float) width / 2, height-100, 0, 0, 0, 0);
+    Character current = new Character((float) (width -100), height-100, 0, 0, 0, 0);
 
     Boss boss = new Boss(400, 500, 3, 1, 10000);
 
@@ -86,6 +88,11 @@ public class Game extends PApplet {
                     if (current.equals(david)) {
                         if (david.getSpecial() == 1) {
                             david.setSpecial(0);
+                            coolDown = 0;
+                            done = true;
+                        }
+                        else {
+                            current.loseHP(1);
                         }
 
                     } else {
@@ -94,8 +101,8 @@ public class Game extends PApplet {
                 }
             }
         }
+        coolDown++;
 
-        System.out.println(height - current.getY(time, height));
     }
 
 
@@ -122,15 +129,23 @@ public class Game extends PApplet {
     private void doAbility(Character current) {
         Bullet cBullet;
         if (pBoolean) {
-            cBullet = current.ability1(current, time, width, height, keyPressed, key);
+            cBullet = current.ability1(time, width, height, keyPressed, key);
             bList.add(cBullet);
             pBoolean = false;
         }
         if (lBoolean) {
-            if (current.ability2(current, boss, time, width, height)) {
-                lBoolean = false;
+            String name = current.toString();
+            if (current.ability2(name,boss, time, width, height, coolDown, done)) {
+                if (current.equals(michael) || current.equals(leo)) {
                 boss.loseHP(2);
+                }
+                if(current.equals(finn)) {
+                    michael.gainHP(5);
+                    leo.gainHP(5);
+                    david.gainHP(5);
+                }
             }
+            lBoolean = false;
         }
     }
 
@@ -141,6 +156,7 @@ public class Game extends PApplet {
         }
         if (key == 'l') {
             lBoolean = true;
+            done = false;
             doAbility(current);
         }
     }
@@ -161,27 +177,23 @@ public class Game extends PApplet {
                 current = david;
             }
             if (key == 'a') {
-                if (!(current.getX(time, width) < 50)) {
+                if (!(current.getX(time, width) < 50)&&(current.getY(time,height)>300)) {
                     time++;
                 }
             }
             if (key == 'd') {
-                if (!(current.getX(time, width) > width - 50)) {
+                if ((!(current.getX(time, width) > width - 50))&&(current.getY(time,height)>300)) {
                     time--;
                 }
             }
             if (key == 'w') {
-                if (current.getupDown() <=700 && current.getupDown()>300) {
-                    // if (current.getY(time, height) < height - 500 && current.getY(time, height) > height - 100) {
+                if (current.getupDown()>=300) {
                     current.setupDown(-10);
-                    // }
                 }
             }
             if (key == 's') {
-                if (current.getupDown() >300 && current.getupDown()<=700) {
-                    //if (current.getY(time, height) < height - 500 && current.getY(time, height) > height - 100) {
+                if (current.getupDown()<=700) {
                     current.setupDown(10);
-                    // }
                 }
             }
         }

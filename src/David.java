@@ -10,21 +10,16 @@ public class David extends Character {
         return new Bullet(current.getX(time, width), current.getY(time, height), 4, 3);
     }
 
-    public boolean ability2(int coolDown, boolean done) {
-        if (!done) {
-            if (coolDown >= 15) {
-                this.special = 1;
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     public void drawCharacter(PApplet game) {
         game.fill(255, 0, 0);
         //replace with image
         game.rect((float) x, (float) y, 10, 100);
 
+    }
+    public String toString() {
+        return "david";
     }
 }
 
