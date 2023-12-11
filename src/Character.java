@@ -1,4 +1,7 @@
 import processing.core.PApplet;
+import processing.core.PImage;
+
+import java.util.ArrayList;
 
 public class Character {
     protected double x, y, xSpeed, ySpeed;
@@ -7,6 +10,8 @@ public class Character {
     protected boolean alive;
     protected int special;
     protected static int frameRate = 60;
+    protected int counter;
+
 
     public Character(double x, double y, double xSpeed, double ySpeed, int maxHP, int special) {
         this.x = x;
@@ -17,11 +22,25 @@ public class Character {
         this.hp = maxHP;
         this.upDown = 500;
         this.special = special;
+        counter++;
     }
 
-    public void drawCharacter(PApplet game) {
-        game.rect((float) x, (float) y, 10, 100);
-
+    public void drawCharacter(PApplet game, PImage[] img, String name, boolean lBool) {
+        if (name.equals("leo")) {
+            if (lBool) {
+                if(counter%2==0) {
+                    game.image(img[4],(float)x, (float) y);
+                }
+                else {
+                    game.image(img[5],(float)x,(float)y);
+                }
+                counter++;
+            } else {
+                game.image(img[0], (float) x, (float) y);
+            }
+        } else {
+            game.rect((float) x, (float) y, 47, 69);
+        }
     }
 
     protected double getX(int time, int width) {
@@ -85,13 +104,13 @@ public class Character {
                 return true;
             }
         } else if (current.equals("finn")) {
-            if (coolDown > (frameRate * 30)) {
+            if (coolDown > (frameRate * 15)) {
                 this.special = 1;
                 return true;
             }
         } else if (current.equals("david")) {
             if (!done) {
-                if (coolDown >= (frameRate * 30)) {
+                if (coolDown >= (frameRate * 15)) {
                     this.special = 1;
                     return true;
                 }

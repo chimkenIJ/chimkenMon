@@ -51,12 +51,10 @@ public class Boss {
     }
 
     public void move() {
-        if (x >= 700 || x<=300) {
+        if (x >= 550 || x<=450) {
             xSpeed *= -1;
-            ySpeed *= -1;
         }
         x+=xSpeed;
-        y+=ySpeed;
     }
 
     public void loseHP(int hpLost) {
