@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 public class Game extends PApplet {
     // TODO: declare game variables
+    final int Start = 0;
+    final int Game = 1;
+    final int End = 2;
+    int mode = Game;
+
     PImage startbg, bg;
     PImage I_leo, I_leoPunch1, I_leoPunch2, I_dagger;
     PImage I_michael, I_michaelStick1, I_michaelStick2;
@@ -40,18 +45,13 @@ public class Game extends PApplet {
     Boss boss = new Boss(500, 350, 1, 0, 10000);
     Character current = new Character((float) (width - 100), height - 100, 0, 0, 0, 0);
 
-    final int Start = 0;
-    final int Game = 1;
-    final int End = 2;
-    int mode = Start;
-
     public void settings() {
         size(width, height);   // set the window size
     }
 
     public void setup() {
         // TODO: initialize game variables
-        bg = loadImage("background.PNG");
+        bg = loadImage("bgg.png");
         bg.resize(width, height);
         startbg = loadImage("01-Isometric-Dungeon-Preview-05.jpg");
         startbg.resize(width, height);
@@ -192,7 +192,6 @@ public class Game extends PApplet {
                     }
                 }
             }
-
         }
 
         if (mode == End) {
@@ -200,7 +199,7 @@ public class Game extends PApplet {
         }
     }
 
-    private void createChickens() {
+    public void createChickens() {
         int xSpeed, ySpeed, xDirection, yDirection;
         int swarmCount = (int) (Math.random() * 5) + 10;
         for (int i = 0; i < swarmCount; i++) {
@@ -218,7 +217,7 @@ public class Game extends PApplet {
         }
     }
 
-    private void doAbility(Character current) {
+    public void doAbility(Character current) {
         Bullet cBullet;
         //ability 1
         if (pBoolean) {
@@ -257,7 +256,7 @@ public class Game extends PApplet {
         }
     }
 
-    private void ifKeyPressed(boolean keyPressed, int key) {
+    public void ifKeyPressed(boolean keyPressed, int key) {
         if (keyPressed) {
             //1 through 4 --> switching character
             if (key == '1') {
