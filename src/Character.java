@@ -26,17 +26,30 @@ public class Character {
     }
 
     public void drawCharacter(PApplet game, PImage[] img, String name, boolean lBool) {
-        if (name.equals("leo")) {
+        if(lBool) {
+            System.out.println(lBool);
+        }
+        if (name.equals("michael")) {
             if (lBool) {
-                if(counter%2==0) {
-                    game.image(img[4],(float)x, (float) y);
-                }
-                else {
-                    game.image(img[5],(float)x,(float)y);
+                if (counter % 2 == 0) {
+                    game.image(img[4], (float) x, (float) y);
+                } else {
+                    game.image(img[5], (float) x, (float) y);
                 }
                 counter++;
             } else {
                 game.image(img[0], (float) x, (float) y);
+            }
+        } else if (name.equals("leo")) {
+            if (lBool) {
+                if (counter % 2 == 0) {
+                    game.image(img[6], (float) x, (float) y);
+                } else {
+                    game.image(img[7], (float) x, (float) y);
+                }
+                counter++;
+            } else {
+                game.image(img[1], (float) x, (float) y);
             }
         } else {
             game.rect((float) x, (float) y, 47, 69);

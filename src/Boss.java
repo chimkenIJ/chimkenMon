@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class Boss {
     private double x, y, xSpeed, ySpeed;
@@ -20,9 +21,10 @@ public class Boss {
         return this.y;
     }
 
-    public void drawBoss(PApplet game) {
-        game.fill(255, 255, 0);
-        game.rect((float) x, (float) y, 100, 100);
+    public void drawBoss(PApplet game, PImage[] img) {
+       game.image(img[0], (float)x, (float)y);
+        //game.fill(255, 255, 0);
+       // game.rect((float) x, (float) y, 100, 100);
     }
 
     public void ability1() {

@@ -1,9 +1,10 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class Bullet {
     protected double x, y, xSpeed, ySpeed;
     protected static int width = 1000, height = 800;
-    protected static double imageWidth = 10, imageHeight = 10;
+    protected static double imageWidth = 50, imageHeight = 65;
     public Bullet (double x, double y, double xSpeed, double ySpeed){
         this.x = x;
         this.y = y;
@@ -32,9 +33,12 @@ public class Bullet {
         return false;
     }
 
-    public void drawBullet(PApplet game) {
-        game.fill(0, 255, 0);
-        game.rect((float)(x+5),(float)(y+50),(float)imageWidth, (float)imageHeight);
+    public void drawBullet(PApplet game, PImage[] img, String name) {
+        if(name.equals("leo")) {
+            game.image(img[0],(float)(x+5), (float)(y+50));
+        }
+        else {game.fill(0, 255, 0);
+        game.rect((float)(x+5),(float)(y+50),(float)imageWidth, (float)imageHeight);}
     }
 
     public double getX() {

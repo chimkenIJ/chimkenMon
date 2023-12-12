@@ -7,9 +7,15 @@ import java.util.ArrayList;
 public class Game extends PApplet {
     // TODO: declare game variables
     PImage bg;
-    PImage I_leo, I_leoPunch1, I_leoPunch2;
+    PImage I_leo, I_leoPunch1, I_leoPunch2, I_dagger;
+    PImage I_michael, I_michaelStick1, I_michaelStick2;
+    PImage I_finn, I_finnHeal1, I_finnHeal2;
+    PImage I_david, I_davidShield1, I_davidShield2;
+    PImage I_boss;
 
-    PImage[] img = new PImage[10];
+    PImage[] PI_char = new PImage[10];
+    PImage[] PI_bullet = new PImage[4];
+    PImage[] PI_boss = new PImage[3];
 
     int width = 1000;
     int height = 800;
@@ -30,9 +36,10 @@ public class Game extends PApplet {
     Character finn = new Finn((float) width / 2, height, 12, 92, 130, 0);
     Character david = new David((float) width / 2, height, 12, 9, 140, 0);
 
-    Character current = new Character((float) (width -100), height-100, 0, 0, 0, 0);
 
     Boss boss = new Boss(500, 350, 1, 0, 10000);
+    Character current = new Character((float) (width -100), height-100, 0, 0, 0, 0);
+
 
     public void settings() {
         size(width, height);   // set the window size
@@ -40,22 +47,46 @@ public class Game extends PApplet {
 
     public void setup() {
         // TODO: initialize game variables
-        bg = loadImage("01-Isometric-Dungeon-Preview-05.jpg");
+        bg = loadImage("background.PNG");
         bg.resize(width, height);
 
-        current = michael;
 
         I_leo = loadImage("Untitled_Artwork.png");
         I_leoPunch1 =loadImage("Untitled_Artwork (1).png");
         I_leoPunch2 =loadImage("Untitled_Artwork (2).png");
+        I_dagger = loadImage("DAG0bmWVwAE-6gW.png");
+
+        I_michael = loadImage("REALmichael.png");
+        I_michaelStick1 = loadImage("RESLREALSTICK1.png");
+        I_michaelStick2 = loadImage("REAREALSTICK2.png");
+
+        I_boss =loadImage("boss.png");
 
         I_leo.resize((int)(47*1.5),(int)(69*1.5));
         I_leoPunch1.resize((int)(47*1.5),(int)(69*1.5));
         I_leoPunch2.resize((int)(47*1.5),(int)(69*1.5));
+        I_dagger.resize(50,65);
 
-        img[0] = I_leo;
-        img[4] = I_leoPunch1;
-        img[5] = I_leoPunch2;
+        I_michael.resize((int)(72*1.5),(int)(69*1.5));
+        I_michaelStick1.resize((int)(72*1.5),(int)(69*1.5));
+        I_michaelStick2.resize((int)(72*1.5),(int)(69*1.5));
+
+        I_boss.resize(170,170);
+
+        PI_char[0] = I_michael;
+        PI_char[1] = I_leo;
+
+        PI_char[4] = I_michaelStick1;
+        PI_char[5] = I_michaelStick2;
+        PI_char[6] = I_leoPunch1;
+        PI_char[7] = I_leoPunch2;
+
+        PI_bullet[0] = I_dagger;
+
+        PI_boss[0] = I_boss;
+
+        current = michael;
+
 
     }
 
@@ -69,9 +100,8 @@ public class Game extends PApplet {
         background(bg);
         ifKeyPressed(keyPressed, key);
         String name1 = current.toString();
-        current.drawCharacter(this, img, name1, lBoolean);
-        System.out.println(name1);
-        boss.drawBoss(this);
+        current.drawCharacter(this, PI_char, name1, lBoolean);
+        boss.drawBoss(this, PI_boss);
         boss.move();
 
         //health
@@ -82,7 +112,7 @@ public class Game extends PApplet {
         for (int i = 0; i < bList.size(); i++) {
             Bullet b = bList.get(i);
             if (b != null) {
-                b.drawBullet(this);
+                b.drawBullet(this, PI_bullet, name1);
                 b.move();
                 if (b.removeFromList()) {
                     bList.remove(b);
@@ -167,7 +197,6 @@ public class Game extends PApplet {
         //ability 2
         if (lBoolean) {
             String name = current.toString();
-            System.out.println(name);
             if (current.ability2(name,boss, time, width, height, coolDown, done)) {
                 if (current.equals(michael) || current.equals(leo)) {
                 boss.loseHP(2);
@@ -195,7 +224,6 @@ public class Game extends PApplet {
             doAbility(current);
         }
     }
-
 
     private void ifKeyPressed(boolean keyPressed, int key) {
         if (keyPressed) {
