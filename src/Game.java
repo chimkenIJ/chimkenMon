@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Game extends PApplet {
     // TODO: declare game variables
-    PImage bg;
+    PImage startbg, bg;
     PImage I_leo, I_leoPunch1, I_leoPunch2, I_dagger;
     PImage I_michael, I_michaelStick1, I_michaelStick2;
     PImage I_finn, I_finnHeal1, I_finnHeal2;
@@ -21,7 +21,7 @@ public class Game extends PApplet {
     int height = 800;
 
     int time = 2;
-    int coolDown = 15*30;
+    int coolDown = 15 * 30;
 
     boolean pBoolean;
     boolean lBoolean;
@@ -31,15 +31,19 @@ public class Game extends PApplet {
     ArrayList<Bullet> bList = new ArrayList<>();
     ArrayList<Chicken> cList = new ArrayList<>();
 
-    Character michael = new Michael((float) (width-100), height-100, 12, 9, 100, 0);
+    Character michael = new Michael((float) (width - 100), height - 100, 12, 9, 100, 0);
     Character leo = new Leo((float) width / 2, height, 12, 9, 100, 0);
     Character finn = new Finn((float) width / 2, height, 12, 92, 130, 0);
     Character david = new David((float) width / 2, height, 12, 9, 140, 0);
 
 
     Boss boss = new Boss(500, 350, 1, 0, 10000);
-    Character current = new Character((float) (width -100), height-100, 0, 0, 0, 0);
+    Character current = new Character((float) (width - 100), height - 100, 0, 0, 0, 0);
 
+    final int Start = 0;
+    final int Game = 1;
+    final int End = 2;
+    int mode = Start;
 
     public void settings() {
         size(width, height);   // set the window size
@@ -49,29 +53,30 @@ public class Game extends PApplet {
         // TODO: initialize game variables
         bg = loadImage("background.PNG");
         bg.resize(width, height);
-
+        startbg = loadImage("01-Isometric-Dungeon-Preview-05.jpg");
+        startbg.resize(width, height);
 
         I_leo = loadImage("Untitled_Artwork.png");
-        I_leoPunch1 =loadImage("Untitled_Artwork (1).png");
-        I_leoPunch2 =loadImage("Untitled_Artwork (2).png");
+        I_leoPunch1 = loadImage("Untitled_Artwork (1).png");
+        I_leoPunch2 = loadImage("Untitled_Artwork (2).png");
         I_dagger = loadImage("DAG0bmWVwAE-6gW.png");
 
         I_michael = loadImage("REALmichael.png");
         I_michaelStick1 = loadImage("RESLREALSTICK1.png");
         I_michaelStick2 = loadImage("REAREALSTICK2.png");
 
-        I_boss =loadImage("boss.png");
+        I_boss = loadImage("boss.png");
 
-        I_leo.resize((int)(47*1.5),(int)(69*1.5));
-        I_leoPunch1.resize((int)(47*1.5),(int)(69*1.5));
-        I_leoPunch2.resize((int)(47*1.5),(int)(69*1.5));
-        I_dagger.resize(50,65);
+        I_leo.resize((int) (47 * 1.5), (int) (69 * 1.5));
+        I_leoPunch1.resize((int) (47 * 1.5), (int) (69 * 1.5));
+        I_leoPunch2.resize((int) (47 * 1.5), (int) (69 * 1.5));
+        I_dagger.resize(50, 65);
 
-        I_michael.resize((int)(72*1.5),(int)(69*1.5));
-        I_michaelStick1.resize((int)(72*1.5),(int)(69*1.5));
-        I_michaelStick2.resize((int)(72*1.5),(int)(69*1.5));
+        I_michael.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_michaelStick1.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_michaelStick2.resize((int) (72 * 1.5), (int) (69 * 1.5));
 
-        I_boss.resize(170,170);
+        I_boss.resize(170, 170);
 
         PI_char[0] = I_michael;
         PI_char[1] = I_leo;
@@ -95,78 +100,105 @@ public class Game extends PApplet {
      * tick each object (have it update itself), and draw each object
      */
     public void draw() {
-
-        //background, moving
-        background(bg);
-        ifKeyPressed(keyPressed, key);
-        String name1 = current.toString();
-        current.drawCharacter(this, PI_char, name1, lBoolean);
-        boss.drawBoss(this, PI_boss);
-        boss.move();
-
-        //health
-        text("Boss Health: " + boss.getHP(), 100, 100);
-        text("Character Health: " + current.getHP(), 800, 100);
-
-        //bullets (ability 1 character)
-        for (int i = 0; i < bList.size(); i++) {
-            Bullet b = bList.get(i);
-            if (b != null) {
-                b.drawBullet(this, PI_bullet, name1);
-                b.move();
-                if (b.removeFromList()) {
-                    bList.remove(b);
-                    i--;
-                }
-                if (boss.collide(b)) {
-                    bList.remove(b);
-                    i--;
-                    boss.loseHP(1);
+        if (mode == Start) {
+            background(startbg);
+            if (keyPressed) {
+                if (key == 's') {
+                    mode = Game;
                 }
             }
         }
+        if (mode == Game) {
+            //background, moving
+            background(bg);
+            ifKeyPressed(keyPressed, key);
+            String name1 = current.toString();
+            current.drawCharacter(this, PI_char, name1, lBoolean);
+            boss.drawBoss(this, PI_boss);
+            boss.move();
 
-        //chickens (boss) + david ability 1 implementation
-        if (Math.random() <= 0.02) {
-            createChickens();
-        }
-        for (int j = 0; j < cList.size(); j++) {
-            Chicken c = cList.get(j);
-            if (c != null) {
-                c.drawChicken(this);
-                c.move();
+            //health
+            text("Boss Health: " + boss.getHP(), 100, 100);
+            text("Character Health: " + current.getHP(), 800, 100);
 
-                if (c.removeFromList()) {
-                    cList.remove(c);
-
-                    j--;
-
-                }
-                if (current.collide(c)) {
-                    cList.remove(c);
-                    j--;
-                    if (current.equals(david)) {
-                        if (david.getSpecial() == 1) {
-                            david.setSpecial(0);
-                            coolDown = 0;
-                            done = true;
-                        }
-                        else {
-                            current.loseHP(1);
-                        }
-
-                    } else {
-                        current.loseHP(1);
+            //bullets (ability 1 character)
+            for (int i = 0; i < bList.size(); i++) {
+                Bullet b = bList.get(i);
+                if (b != null) {
+                    b.drawBullet(this, PI_bullet, name1);
+                    b.move();
+                    if (b.removeFromList()) {
+                        bList.remove(b);
+                        i--;
+                    }
+                    if (boss.collide(b)) {
+                        bList.remove(b);
+                        i--;
+                        boss.loseHP(1);
                     }
                 }
             }
+
+            //chickens (boss) + david ability 1 implementation
+            if (Math.random() <= 0.02) {
+                createChickens();
+            }
+            for (int j = 0; j < cList.size(); j++) {
+                Chicken c = cList.get(j);
+                if (c != null) {
+                    c.drawChicken(this);
+                    c.move();
+
+                    if (c.removeFromList()) {
+                        cList.remove(c);
+
+                        j--;
+
+                    }
+                    if (current.collide(c)) {
+                        cList.remove(c);
+                        j--;
+                        if (current.equals(david)) {
+                            if (david.getSpecial() == 1) {
+                                david.setSpecial(0);
+                                coolDown = 0;
+                                done = true;
+                            } else {
+                                current.loseHP(1);
+                            }
+
+                        } else {
+                            current.loseHP(1);
+                        }
+                    }
+                }
+            }
+
+            //ability 2 coolDown
+            coolDown++;
+
+            if (current.getHP() <= 0) {
+                current = michael;
+                if (michael.getHP() <= 0) {
+                    current = leo;
+                    if (leo.getHP() <= 0) {
+                        current = finn;
+                        if (finn.getHP() <= 0) {
+                            current = david;
+                            if (david.getHP() <= 0) {
+                                mode = End;
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
-        //ability 2 cooldown
-        coolDown++;
-
+        if (mode == End) {
+            background(startbg);
+        }
     }
-
 
     private void createChickens() {
         int xSpeed, ySpeed, xDirection, yDirection;
@@ -197,11 +229,11 @@ public class Game extends PApplet {
         //ability 2
         if (lBoolean) {
             String name = current.toString();
-            if (current.ability2(name,boss, time, width, height, coolDown, done)) {
+            if (current.ability2(name, boss, time, width, height, coolDown, done)) {
                 if (current.equals(michael) || current.equals(leo)) {
-                boss.loseHP(2);
+                    boss.loseHP(2);
                 }
-                if(current.equals(finn)) {
+                if (current.equals(finn)) {
                     michael.gainHP(5);
                     leo.gainHP(5);
                     david.gainHP(5);
@@ -242,25 +274,25 @@ public class Game extends PApplet {
             }
             //left
             if (key == 'a') {
-                if (!(current.getX(time, width) < 50)&&(current.getY(time,height)>300)) {
+                if (!(current.getX(time, width) < 50) && (current.getY(time, height) > 300)) {
                     time++;
                 }
             }
             //right
             if (key == 'd') {
-                if ((!(current.getX(time, width) > width - 50))&&(current.getY(time,height)>300)) {
+                if ((!(current.getX(time, width) > width - 50)) && (current.getY(time, height) > 300)) {
                     time--;
                 }
             }
             //up
             if (key == 'w') {
-                if (current.getupDown()>=300) {
+                if (current.getupDown() >= 300) {
                     current.setupDown(-10);
                 }
             }
             //down
             if (key == 's') {
-                if (current.getupDown()<=700) {
+                if (current.getupDown() <= 700) {
                     current.setupDown(10);
                 }
             }
