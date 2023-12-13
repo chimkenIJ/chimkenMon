@@ -51,8 +51,23 @@ public class Character {
             } else {
                 game.image(img[1], (float) x, (float) y);
             }
-        } else {
-            game.rect((float) x, (float) y, 47, 69);
+        }
+        else if (name.equals("finn")) {
+            if (lBool) {
+                    game.image(img[8], (float) x, (float) y);
+            } else {
+                game.image(img[2], (float) x, (float) y);
+            }
+        }
+        else if (name.equals("david")) {
+            if (lBool) {
+                game.image(img[9], (float) x, (float) y);
+            } else {
+                game.image(img[3], (float) x, (float) y);
+            }
+        }
+        else {
+            System.out.println("??");
         }
     }
 

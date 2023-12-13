@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class Chicken {
     private double x, y, xSpeed, ySpeed;
@@ -10,9 +11,11 @@ public class Chicken {
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
     }
-    public void drawChicken(PApplet game) {
-        game.fill(0, 0, 255);
-        game.rect((float)x,(float)y,(float)imageWidth, (float)imageHeight);
+    public void drawChicken(PApplet game, PImage img) {
+        /*game.fill(0, 0, 255);
+        game.rect((float)x,(float)y,(float)imageWidth, (float)imageHeight);*/
+        game.image(img,(float)x,(float)y);
+
     }
     public void move(){
         x+=xSpeed;
