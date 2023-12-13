@@ -12,14 +12,14 @@ public class Game extends PApplet {
     int mode = Game;
 
     PImage startbg, bg;
-    PImage I_leo, I_leoPunch1, I_leoPunch2, I_dagger;
-    PImage I_michael, I_michaelStick1, I_michaelStick2;
-    PImage I_finn, I_finnHeal;
-    PImage I_david, I_davidShield;
+    PImage I_leo, I_leoPunch1, I_leoPunch2, I_leoRight, I_leoBack, I_dagger;
+    PImage I_michael, I_michaelStick1, I_michaelStick2, I_michaelRight,I_michaelBack;
+    PImage I_finn, I_finnHeal, I_finnRight, I_finnBack;
+    PImage I_david, I_davidShield, I_davidRight, I_davidBack;
     PImage I_boss;
     PImage I_chicken;
 
-    PImage[] PI_char = new PImage[10];
+    PImage[] PI_char = new PImage[12];
     PImage[] PI_bullet = new PImage[4];
     PImage[] PI_boss = new PImage[3];
 
@@ -60,17 +60,25 @@ public class Game extends PApplet {
         I_leo = loadImage("Untitled_Artwork.png");
         I_leoPunch1 = loadImage("Untitled_Artwork (1).png");
         I_leoPunch2 = loadImage("Untitled_Artwork (2).png");
+        I_leoRight = loadImage("");
+        I_leoBack = loadImage("leoback.png");
         I_dagger = loadImage("DAG0bmWVwAE-6gW.png");
 
         I_michael = loadImage("REALmichael.png");
         I_michaelStick1 = loadImage("RESLREALSTICK1.png");
         I_michaelStick2 = loadImage("REAREALSTICK2.png");
+        I_michaelRight = loadImage("");
+        I_michaelBack = loadImage("michaelback.png");
 
         I_finn = loadImage("FINNN-removebg-preview.png");
         I_finnHeal = loadImage("heal.png");
+        I_finnRight = loadImage("");
+        I_finnBack = loadImage("finnback.png");
 
         I_david = loadImage("david.png");
         I_davidShield = loadImage("shield.png");
+        I_davidRight = loadImage("");
+        I_davidBack = loadImage("davidback.png");
 
         I_boss = loadImage("boss.png");
 
@@ -96,15 +104,17 @@ public class Game extends PApplet {
         I_chicken.resize(30,30);
 
         PI_char[0] = I_michael;
-        PI_char[1] = I_leo;
-        PI_char[2] = I_finn;
-        PI_char[3] = I_david;
-        PI_char[4] = I_michaelStick1;
-        PI_char[5] = I_michaelStick2;
-        PI_char[6] = I_leoPunch1;
-        PI_char[7] = I_leoPunch2;
+        PI_char[3] = I_leo;
+        PI_char[6] = I_finn;
+        PI_char[9] = I_david;
+        PI_char[1] = I_michaelStick1;
+        PI_char[2] = I_michaelStick2;
+        PI_char[4] = I_leoPunch1;
+        PI_char[5] = I_leoPunch2;
+        PI_char[7] = I_finnHeal;
         PI_char[8] = I_finnHeal;
-        PI_char[9] = I_davidShield;
+        PI_char[10] = I_davidShield;
+        PI_char[11] = I_davidShield;
 
         PI_bullet[0] = I_dagger;
 

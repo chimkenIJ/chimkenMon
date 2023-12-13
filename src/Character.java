@@ -1,8 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
-import java.util.ArrayList;
-
 public class Character {
     protected double x, y, xSpeed, ySpeed;
     protected int upDown;
@@ -11,6 +9,7 @@ public class Character {
     protected int special;
     protected static int frameRate = 60;
     protected int counter;
+    protected int lPose;
 
 
     public Character(double x, double y, double xSpeed, double ySpeed, int maxHP, int special) {
@@ -22,13 +21,15 @@ public class Character {
         this.hp = maxHP;
         this.upDown = 500;
         this.special = special;
-        counter++;
+        counter = 0;
+        lPose = 0;
     }
 
-    public void drawCharacter(PApplet game, PImage[] img, String name, boolean lBool) {
+    /*public void drawCharacter(PApplet game, PImage[] img, String name, boolean lBool) {
         if(lBool) {
             System.out.println(lBool);
         }
+
         if (name.equals("michael")) {
             if (lBool) {
                 if (counter % 2 == 0) {
@@ -69,7 +70,38 @@ public class Character {
         else {
             System.out.println("??");
         }
+    }*/
+    public void drawCharacter(PApplet game, PImage[] img, String name, boolean lBool) {
+
+        if (lPose > 0) {
+            counter++;
+        }
+        if (counter > 30 * 0.5) {
+            counter = 0;
+            lPose = 0;
+        }
+        if (counter > 0) {
+            if (counter % 2 == 0) {
+                lPose = 2;
+            } else {
+                lPose = 1;
+            }
+        }
+        if (name.equals("michael")) {
+            game.image(img[0 + lPose], (float) x, (float) y);
+        } else if (name.equals("leo")) {
+            game.image(img[3 + lPose], (float) x, (float) y);
+        } else if (name.equals("finn")) {
+
+            game.image(img[6 + lPose], (float) x, (float) y);
+        } else if (name.equals("david")) {
+
+            game.image(img[9 + lPose], (float) x, (float) y);
+        } else {
+            System.out.println("??");
+        }
     }
+
 
     protected double getX(int time, int width) {
 
@@ -116,7 +148,7 @@ public class Character {
         double charX = this.getX(time, width);
         double bossY = boss.getY();
         double charY = this.getY(time, height);
-        if (bossX <= charX && bossX + 100 >= charX && bossY <= charY && bossY + 100 >= charY) {
+        if (bossX <= this.getX(time,width) && (bossX + 170 >= charX )&& (bossY <= charY && bossY + 170 >= charY)) {
             return true;
         }
         return false;
@@ -129,17 +161,22 @@ public class Character {
     public boolean ability2(String current, Boss boss, int time, int width, int height, int coolDown, boolean done) {
         if (current.equals("michael") || current.equals("leo")) {
             if (this.collide(boss, time, width, height)) {
+                this.lPose = 1;
                 return true;
             }
         } else if (current.equals("finn")) {
             if (coolDown > (frameRate * 15)) {
                 this.special = 1;
+                this.lPose = 1;
+
                 return true;
             }
         } else if (current.equals("david")) {
             if (!done) {
                 if (coolDown >= (frameRate * 15)) {
                     this.special = 1;
+                    this.lPose = 1;
+
                     return true;
                 }
             }
