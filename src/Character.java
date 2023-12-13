@@ -155,7 +155,14 @@ public class Character {
     }
 
     public Bullet ability1(int time, int width, int height, boolean keyPressed, int key) {
-        return new Bullet(this.getX(time, width), this.getY(time, height), 10, 10);
+        int go;
+        if(this.getX(time,width)>500) {
+            go = -10;
+        }
+        else {
+            go = 10;
+        }
+        return new Bullet(this.getX(time, width), this.getY(time, height), go, -10);
     }
 
     public boolean ability2(String current, Boss boss, int time, int width, int height, int coolDown, boolean done) {

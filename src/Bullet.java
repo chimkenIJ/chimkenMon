@@ -35,10 +35,18 @@ public class Bullet {
 
     public void drawBullet(PApplet game, PImage[] img, String name) {
         if(name.equals("leo")) {
-            game.image(img[0],(float)(x+5), (float)(y+50));
+            game.image(img[1],(float)(x+50), (float)(y+50));
+        }else if(name.equals("michael")) {
+            game.image(img[0],(float)(x+50),(float)(y+50));
         }
-        else {game.fill(0, 255, 0);
-        game.rect((float)(x+5),(float)(y+50),(float)imageWidth, (float)imageHeight);}
+        else if(name.equals("david")) {
+            game.image(img[3], (float)(x+50),(float)(y+50));
+        }else if(name.equals("finn")) {
+            game.image(img[2],(float)(x+50),(float)(y+50));
+        }
+        else {
+            System.out.println("???");
+        }
     }
 
     public double getX() {
