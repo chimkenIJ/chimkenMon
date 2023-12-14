@@ -1,3 +1,5 @@
+import ddf.minim.AudioPlayer;
+import ddf.minim.Minim;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -12,7 +14,7 @@ public class Game extends PApplet {
     final int End = 2;
     int mode = Start1;
 
-    PImage startbg, bg;
+    PImage bg, winBg, loseBg;
     PImage I_leo, I_leoPunch1, I_leoPunch2, I_leoRight, I_leoBack, I_dagger;
     PImage I_michael, I_michaelStick1, I_michaelStick2, I_michaelRight, I_michaelBack, I_bunny;
     PImage I_finn, I_finnHeal, I_finnRight, I_finnBack, I_water;
@@ -21,7 +23,7 @@ public class Game extends PApplet {
     PImage I_chicken;
 
     PImage a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23;
-    PImage I_hM, I_hL,I_hF,I_hD;
+    PImage I_hM, I_hL, I_hF, I_hD;
 
     PImage[] PI_bg = new PImage[24];
     PImage[] PI_char = new PImage[12];
@@ -62,6 +64,9 @@ public class Game extends PApplet {
     boolean watched = false;
     double frame = 0;
 
+    Minim loader;
+    AudioPlayer song;
+
 
     public void settings() {
         size(width, height);   // set the window size
@@ -71,8 +76,12 @@ public class Game extends PApplet {
         // TODO: initialize game variables
         bg = loadImage("bgg.png");
         bg.resize(width, height);
-        startbg = loadImage("01-Isometric-Dungeon-Preview-05.jpg");
-        startbg.resize(width, height);
+        winBg = loadImage("win.png");
+        winBg.resize(width, height);
+        loseBg = loadImage("end.png");
+        loseBg.resize(width, height);
+        loader = new Minim(this);
+        song = loader.loadFile("y2mate.com - Dark Music  Lucifers Hymn  Choir.mp3");
 
         I_leo = loadImage("Untitled_Artwork.png");
         I_leoPunch1 = loadImage("Untitled_Artwork (1).png");
@@ -135,6 +144,7 @@ public class Game extends PApplet {
         PI_bg[23] = a23;
         for (int i = 0; i < 24; i++) {
             PI_bg[i] = loadImage("frame_" + i + "_delay-0.1s.gif");
+            PI_bg[i].resize(1000, 800);
         }
 
         I_leo.resize((int) (47 * 1.5), (int) (69 * 1.5));
@@ -217,6 +227,7 @@ public class Game extends PApplet {
 
             if (keyPressed) {
                 if (key == 's') {
+                    song.play();
                     mode = Start2;
                 }
             }
@@ -275,18 +286,18 @@ public class Game extends PApplet {
             boss.move();
             boss.hpBar(this);
             current.hpCharBar(this, current);
-            fill(255,255,0);
+            fill(255, 255, 0);
             textSize(10);
-            text("Press key to switch",870,290);
+            text("Press key to switch", 870, 290);
             textSize(10);
-            text("[1]", 870,320);
-            text("[2]", 870,370);
-            text("[3]", 870,420);
-            text("[4]", 870,470);
-            image(I_hD,900,450);
-            image(I_hL,915,350);
-            image(I_hM,900,300);
-            image(I_hF,900,400);
+            text("[1]", 870, 320);
+            text("[2]", 870, 370);
+            text("[3]", 870, 420);
+            text("[4]", 870, 470);
+            image(I_hD, 900, 450);
+            image(I_hL, 915, 350);
+            image(I_hM, 900, 300);
+            image(I_hF, 900, 400);
 
             //health
 
@@ -387,9 +398,9 @@ public class Game extends PApplet {
 
         if (mode == End) {
             if (win) {
-                background(startbg);
+                background(winBg);
             } else {
-                background(bg);
+                background(loseBg);
             }
         }
 
