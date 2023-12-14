@@ -10,7 +10,7 @@ public class Game extends PApplet {
     final int Start2 = 3;
     final int Game = 1;
     final int End = 2;
-    int mode = Game;
+    int mode = Start1;
 
     PImage startbg, bg;
     PImage I_leo, I_leoPunch1, I_leoPunch2, I_leoRight, I_leoBack, I_dagger;
@@ -100,7 +100,7 @@ public class Game extends PApplet {
         I_davidBack = loadImage("davidback-removebg-preview.png");
         I_coin = loadImage("download-removebg-preview.png");
 
-        I_boss = loadImage("boss.png");
+        I_boss = loadImage("bodsssss-removebg-preview.png");
 
         I_chicken = loadImage("chickenbullet.png");
 
