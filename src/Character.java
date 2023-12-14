@@ -157,7 +157,8 @@ public class Character {
 
     public void gainHP(int hpGain) {
         if (!((hpGain + this.hp) > this.maxHP)) {
-            this.hp += hpGain;
+            if(this.hp>0){
+            this.hp += hpGain;}
         }
     }
 

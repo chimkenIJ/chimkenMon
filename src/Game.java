@@ -24,12 +24,14 @@ public class Game extends PApplet {
 
     PImage a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23;
     PImage I_hM, I_hL, I_hF, I_hD;
+    PImage I_hMD, I_hLD, I_hFD, I_hDD;
 
     PImage[] PI_bg = new PImage[24];
     PImage[] PI_char = new PImage[12];
     PImage[] PI_bullet = new PImage[4];
     PImage[] PI_extras = new PImage[15];
     PImage[] PI_boss = new PImage[3];
+    PImage[] PI_head = new PImage[8];
 
 
     int width = 1000;
@@ -117,6 +119,12 @@ public class Game extends PApplet {
         I_hM = loadImage("headShotMichael.png");
         I_hF = loadImage("headShotFinn.png");
         I_hL = loadImage("headShotLeo.png");
+
+        I_hDD = loadImage("1headShotDavid.png");
+        I_hMD = loadImage("1headShotMichael.png");
+        I_hFD = loadImage("1headShotFinn.png");
+        I_hLD = loadImage("1headShotLeo.png");
+
 
         PI_bg[0] = a0;
         PI_bg[1] = a1;
@@ -210,6 +218,16 @@ public class Game extends PApplet {
 
         PI_boss[0] = I_boss;
 
+        PI_head[0] = I_hM;
+        PI_head[1] = I_hL;
+        PI_head[2] = I_hF;
+        PI_head[3] = I_hD;
+        PI_head[4] = I_hMD;
+        PI_head[5] = I_hLD;
+        PI_head[6] = I_hFD;
+        PI_head[7] = I_hDD;
+
+
         current = michael;
 
     }
@@ -223,7 +241,7 @@ public class Game extends PApplet {
             background(0);
             fill(255);
             textSize(33);
-            text("Press s after reading instructions. \nWASD to move (you will move in a arc shaped path) \nPress p to do ability 1 (shooting), and l to do ability 2. \nThe first 2 characters punch once \nclose enough to the chicken boss. \nThe 3rd character heals everyone but himself \n(with a cooldown of 10 seconds).\nThe 4th character equips a shield (blocks 1 shot), \nalso with a cooldown of 10 seconds.\nPress space in the next screen to start the game!", 85, 200);
+            text("THIS GAME HAS VOLUME\nPress s after reading instructions. \nWASD to move (you will move in a arc shaped path) \nPress p to do ability 1 (shooting), and l to do ability 2. \nThe first 2 characters punch once \nclose enough to the chicken boss. \nThe 3rd character heals everyone but himself \n(with a cooldown of 10 seconds).\nThe 4th character equips a shield (blocks 1 shot), \nalso with a cooldown of 10 seconds.\nPress space in the next screen to start the game!", 85, 200);
 
             if (keyPressed) {
                 if (key == 's') {
@@ -253,6 +271,10 @@ public class Game extends PApplet {
 
         }
         if (mode == Game) {
+            if (song.position() == song.length()) {
+                song.rewind();
+                song.play();
+            }
 
             String name1 = current.toString();
             switch (name1) {
@@ -290,14 +312,15 @@ public class Game extends PApplet {
             textSize(10);
             text("Press key to switch", 870, 290);
             textSize(10);
-            text("[1]", 870, 320);
-            text("[2]", 870, 370);
-            text("[3]", 870, 420);
-            text("[4]", 870, 470);
-            image(I_hD, 900, 450);
-            image(I_hL, 915, 350);
-            image(I_hM, 900, 300);
-            image(I_hF, 900, 400);
+            text("[1] Michael", 870, 320);
+            text("[2] Leo", 870, 370);
+            text("[3] Finn", 870, 420);
+            text("[4] David", 870, 470);
+            image(PI_head[3], 920, 450);
+            image(PI_head[1], 935, 350);
+            image(PI_head[0], 920, 300);
+            image(PI_head[2], 920, 400);
+            text("Keys:\nA/D --> left/right in arc path\nW/S --> translate arc up/down\nP --> ability 1: shoot\nL --> ability 2: special\n    [1][2](Leo/Michael) --> punch\n    [3](Finn) --> heal\n    [4](David) --> shield", 820, 650);
 
             //health
 
@@ -367,6 +390,18 @@ public class Game extends PApplet {
 
             //ability 2 coolDown
             coolDown++;
+            if (michael.getHP() <= 0) {
+                PI_head[0] = PI_head[4];
+            }
+            if (leo.getHP() <= 0) {
+                PI_head[1] = PI_head[5];
+            }
+            if (finn.getHP() <= 0) {
+                PI_head[2] = PI_head[6];
+            }
+            if (david.getHP() <= 0) {
+                PI_head[3] = PI_head[7];
+            }
 
             if (current.getHP() <= 0) {
                 current = michael;
