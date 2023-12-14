@@ -345,14 +345,13 @@ public class Game extends PApplet {
                 randAbility = (int) (Math.random() * 30);
                 counter = 0;
             }
-            if (randAbility < 23) {
+            if (randAbility < 28) {
                 if (Math.random() <= 0.02) {
                     createChickens();
-                }
-            } else if (randAbility < 28) {
+                }}
+         else if (randAbility < 30) {
                 boss.ability2();
-            } else if (randAbility < 30) {
-                boss.ability3();
+                counter = 30;
             }
 
             //chickens (boss) + david ability 1 implementation

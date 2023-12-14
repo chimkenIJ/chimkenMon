@@ -26,15 +26,9 @@ public class Boss {
         game.image(img[0], (float) x, (float) y);
     }
 
-    public void ability1() {
-        //chicken wave
-    }
+
 
     public void ability2() {
-        //punch
-    }
-
-    public void ability3() {
         if (this.hp + 10 <= this.maxHP) {
             this.hp += 10;
         }
