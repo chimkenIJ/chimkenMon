@@ -6,29 +6,35 @@ import java.util.ArrayList;
 
 public class Game extends PApplet {
     // TODO: declare game variables
-    final int Start = 0;
+    final int Start1 = 0;
+    final int Start2 = 3;
     final int Game = 1;
     final int End = 2;
     int mode = Game;
 
     PImage startbg, bg;
     PImage I_leo, I_leoPunch1, I_leoPunch2, I_leoRight, I_leoBack, I_dagger;
-    PImage I_michael, I_michaelStick1, I_michaelStick2, I_michaelRight,I_michaelBack, I_bunny;
+    PImage I_michael, I_michaelStick1, I_michaelStick2, I_michaelRight, I_michaelBack, I_bunny;
     PImage I_finn, I_finnHeal, I_finnRight, I_finnBack, I_water;
     PImage I_david, I_davidShield, I_davidRight, I_davidBack, I_coin;
     PImage I_boss;
     PImage I_chicken;
 
+    PImage a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23;
+    PImage I_hM, I_hL,I_hF,I_hD;
+
+    PImage[] PI_bg = new PImage[24];
     PImage[] PI_char = new PImage[12];
     PImage[] PI_bullet = new PImage[4];
     PImage[] PI_extras = new PImage[15];
     PImage[] PI_boss = new PImage[3];
 
+
     int width = 1000;
     int height = 800;
 
-    int time = 2;
-    int coolDown = 15 * 30;
+    double time = 8;
+    int coolDown = 10 * 30;
 
     int char1 = 0;
 
@@ -36,6 +42,7 @@ public class Game extends PApplet {
     boolean lBoolean;
 
     boolean done = true;
+    boolean win = false;
 
     ArrayList<Bullet> bList = new ArrayList<>();
     ArrayList<Chicken> cList = new ArrayList<>();
@@ -46,8 +53,15 @@ public class Game extends PApplet {
     Character david = new David((float) width / 2, height, 12, 9, 140, 0);
 
 
-    Boss boss = new Boss(500, 350, 1, 0, 10000);
+    Boss boss = new Boss(500, 350, 1, 0, 200);
     Character current = new Character((float) (width - 100), height - 100, 0, 0, 0, 0);
+
+
+    int randAbility = 0;
+    int counter = 0;
+    boolean watched = false;
+    double frame = 0;
+
 
     public void settings() {
         size(width, height);   // set the window size
@@ -90,6 +104,39 @@ public class Game extends PApplet {
 
         I_chicken = loadImage("chickenbullet.png");
 
+        I_hD = loadImage("headShotDavid.png");
+        I_hM = loadImage("headShotMichael.png");
+        I_hF = loadImage("headShotFinn.png");
+        I_hL = loadImage("headShotLeo.png");
+
+        PI_bg[0] = a0;
+        PI_bg[1] = a1;
+        PI_bg[2] = a2;
+        PI_bg[3] = a3;
+        PI_bg[4] = a4;
+        PI_bg[5] = a5;
+        PI_bg[6] = a6;
+        PI_bg[7] = a7;
+        PI_bg[8] = a8;
+        PI_bg[9] = a9;
+        PI_bg[10] = a10;
+        PI_bg[11] = a11;
+        PI_bg[12] = a12;
+        PI_bg[13] = a13;
+        PI_bg[14] = a14;
+        PI_bg[15] = a15;
+        PI_bg[16] = a16;
+        PI_bg[17] = a17;
+        PI_bg[18] = a18;
+        PI_bg[19] = a19;
+        PI_bg[20] = a20;
+        PI_bg[21] = a21;
+        PI_bg[22] = a22;
+        PI_bg[23] = a23;
+        for (int i = 0; i < 24; i++) {
+            PI_bg[i] = loadImage("frame_" + i + "_delay-0.1s.gif");
+        }
+
         I_leo.resize((int) (47 * 1.5), (int) (69 * 1.5));
         I_leoRight.resize((int) (47 * 1.5), (int) (69 * 1.5));
         I_leoBack.resize((int) (72 * 1.5), (int) (69 * 1.5));
@@ -102,23 +149,23 @@ public class Game extends PApplet {
         I_michaelRight.resize((int) (72 * 1.5), (int) (69 * 1.5));
         I_michaelStick1.resize((int) (72 * 1.5), (int) (69 * 1.5));
         I_michaelStick2.resize((int) (72 * 1.5), (int) (69 * 1.5));
-        I_bunny.resize(25,30);
+        I_bunny.resize(25, 30);
 
-        I_finn.resize((int)(72*1.5), (int)(69*1.5));
-        I_finnBack.resize((int)(72*1.5), (int)(69*1.5));
-        I_finnRight.resize((int)(72*1.5), (int)(69*1.5));
-        I_finnHeal.resize((int)(72*1.5), (int)(69*1.5));
-        I_water.resize(25,30);
+        I_finn.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_finnBack.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_finnRight.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_finnHeal.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_water.resize(25, 30);
 
-        I_david.resize((int)(72*1.5), (int)(69*1.5));
-        I_davidBack.resize((int)(72*1.5), (int)(69*1.5));
-        I_davidRight.resize((int)(72*1.5), (int)(69*1.5));
-        I_davidShield.resize((int)(72*1.5), (int)(69*1.5));
-        I_coin.resize(20,20);
+        I_david.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_davidBack.resize((int) (64 * 1.5), (int) (69 * 1.5));
+        I_davidRight.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_davidShield.resize((int) (72 * 1.5), (int) (69 * 1.5));
+        I_coin.resize(20, 20);
 
         I_boss.resize(170, 170);
 
-        I_chicken.resize(30,30);
+        I_chicken.resize(30, 30);
 
         PI_char[0] = I_michael;
         PI_char[3] = I_leo;
@@ -155,7 +202,6 @@ public class Game extends PApplet {
 
         current = michael;
 
-
     }
 
     /***
@@ -163,44 +209,86 @@ public class Game extends PApplet {
      * tick each object (have it update itself), and draw each object
      */
     public void draw() {
-        if (mode == Start) {
-            background(startbg);
+        if (mode == Start1) {
+            background(0);
+            fill(255);
+            textSize(33);
+            text("Press s after reading instructions. \nWASD to move (you will move in a arc shaped path) \nPress p to do ability 1 (shooting), and l to do ability 2. \nThe first 2 characters punch once \nclose enough to the chicken boss. \nThe 3rd character heals everyone but himself \n(with a cooldown of 10 seconds).\nThe 4th character equips a shield (blocks 1 shot), \nalso with a cooldown of 10 seconds.\nPress space in the next screen to start the game!", 85, 200);
+
             if (keyPressed) {
                 if (key == 's') {
-                    mode = Game;
+                    mode = Start2;
                 }
             }
         }
-        if (mode == Game) {
-            String name1 = current.toString();
-if(name1.equals("michael")) {
-    char1 = 0;
-}else if(name1.equals("leo")) {
-    char1 = 3;
-}else if(name1.equals("finn")) {
-    char1 = 6;
-}else if(name1.equals("david")) {
-    char1 = 9;
-}
-            if(current.getX(time, width)<333) {
-                PI_char[char1] = PI_extras[char1];
-            }else if(current.getX(time,width)>=333 && current.getX(time,width)<666) {
-                PI_char[char1] = PI_extras[char1+2];
 
-            }else if(current.getX(time,width)>=666) {
-                PI_char[char1] = PI_extras[char1+1];
+        if (mode == Start2) {
+            if (!watched) {
+                background(PI_bg[(int) frame]);
+                if (frame >= 22.75) {
+                    watched = true;
+                } else {
+                    frame = frame + 0.25;
+                }
+            } else {
+
+                if (keyPressed) {
+                    if (key == ' ') {
+
+                        mode = Game;
+                    }
+                }
+            }
+
+        }
+        if (mode == Game) {
+
+            String name1 = current.toString();
+            switch (name1) {
+                case "michael":
+                    char1 = 0;
+                    break;
+                case "leo":
+                    char1 = 3;
+                    break;
+                case "finn":
+                    char1 = 6;
+                    break;
+                case "david":
+                    char1 = 9;
+                    break;
+            }
+            if (current.getX(time, width) < 333) {
+                PI_char[char1] = PI_extras[char1];
+            } else if (current.getX(time, width) >= 333 && current.getX(time, width) < 666) {
+                PI_char[char1] = PI_extras[char1 + 2];
+
+            } else if (current.getX(time, width) >= 666) {
+                PI_char[char1] = PI_extras[char1 + 1];
 
             }
             //background, moving
             background(bg);
             ifKeyPressed(keyPressed, key);
-            current.drawCharacter(this, PI_char, name1, lBoolean);
+            current.drawCharacter(this, PI_char, name1);
             boss.drawBoss(this, PI_boss);
             boss.move();
+            boss.hpBar(this);
+            current.hpCharBar(this, current);
+            fill(255,255,0);
+            textSize(10);
+            text("Press key to switch",870,290);
+            textSize(10);
+            text("[1]", 870,320);
+            text("[2]", 870,370);
+            text("[3]", 870,420);
+            text("[4]", 870,470);
+            image(I_hD,900,450);
+            image(I_hL,915,350);
+            image(I_hM,900,300);
+            image(I_hF,900,400);
 
             //health
-            text("Boss Health: " + boss.getHP(), 100, 100);
-            text("Character Health: " + current.getHP(), 800, 100);
 
             //bullets (ability 1 character)
             for (int i = 0; i < bList.size(); i++) {
@@ -219,11 +307,22 @@ if(name1.equals("michael")) {
                     }
                 }
             }
+            if (counter > 30) {
+                randAbility = (int) (Math.random() * 30);
+                counter = 0;
+            }
+            if (randAbility < 23) {
+                if (Math.random() <= 0.02) {
+                    createChickens();
+                }
+            } else if (randAbility < 28) {
+                boss.ability2();
+            } else if (randAbility < 30) {
+                boss.ability3();
+            }
 
             //chickens (boss) + david ability 1 implementation
-            if (Math.random() <= 0.02) {
-                createChickens();
-            }
+
             for (int j = 0; j < cList.size(); j++) {
                 Chicken c = cList.get(j);
                 if (c != null) {
@@ -267,17 +366,33 @@ if(name1.equals("michael")) {
                         if (finn.getHP() <= 0) {
                             current = david;
                             if (david.getHP() <= 0) {
+                                win = false;
                                 mode = End;
                             }
                         }
                     }
                 }
             }
+            if (boss.getHP() <= 0) {
+                win = true;
+                mode = End;
+            }
+            if (current.equals(michael) && michael.getHP() <= 0) {
+                text(current.toString(), 300, 400);
+            }
+
+            counter++;
+
         }
 
         if (mode == End) {
-            background(startbg);
+            if (win) {
+                background(startbg);
+            } else {
+                background(bg);
+            }
         }
+
     }
 
     public void createChickens() {
@@ -355,13 +470,13 @@ if(name1.equals("michael")) {
             //left
             if (key == 'a') {
                 if (!(current.getX(time, width) < 50) && (current.getY(time, height) > 300)) {
-                    time++;
+                    time += 0.25;
                 }
             }
             //right
             if (key == 'd') {
-                if ((!(current.getX(time, width) > width - 50)) && (current.getY(time, height) > 300)) {
-                    time--;
+                if ((!(current.getX(time, width) > width - 100)) && (current.getY(time, height) > 300)) {
+                    time -= 0.25;
                 }
             }
             //up

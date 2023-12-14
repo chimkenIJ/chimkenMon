@@ -17,35 +17,28 @@ public class Bullet {
         x+=xSpeed;
         y+=ySpeed;
     }
-  /* public void move(Boss boss ){
-       double xDiff = (boss.getX() - x);
-       double yDiff = (boss.getY() - y);
-       xSpeed = x + xDiff / 10000;
-       ySpeed = y + yDiff / 100000;
-       x+=xSpeed;
-       y+=ySpeed;
-   }*/
 
     public boolean removeFromList(){
-        if (x+imageWidth>width || x<0 || y+imageHeight>height || y<0) {
-            return true;
-        }
-        return false;
+        return x + imageWidth > width || x < 0 || y + imageHeight > height || y < 0;
     }
 
     public void drawBullet(PApplet game, PImage[] img, String name) {
-        if(name.equals("leo")) {
-            game.image(img[1],(float)(x+50), (float)(y+50));
-        }else if(name.equals("michael")) {
-            game.image(img[0],(float)(x+50),(float)(y+50));
-        }
-        else if(name.equals("david")) {
-            game.image(img[3], (float)(x+50),(float)(y+50));
-        }else if(name.equals("finn")) {
-            game.image(img[2],(float)(x+50),(float)(y+50));
-        }
-        else {
-            System.out.println("???");
+        switch (name) {
+            case "leo":
+                game.image(img[1], (float) (x + 50), (float) (y + 50));
+                break;
+            case "michael":
+                game.image(img[0], (float) (x + 50), (float) (y + 50));
+                break;
+            case "david":
+                game.image(img[3], (float) (x + 50), (float) (y + 50));
+                break;
+            case "finn":
+                game.image(img[2], (float) (x + 50), (float) (y + 50));
+                break;
+            default:
+                System.out.println("???");
+                break;
         }
     }
 
@@ -53,10 +46,10 @@ public class Bullet {
         return this.x;
     }public double getY() {
         return this.y;
-    }public double getimageWidth() {
-        return this.imageWidth;
-    }public double getimageHeight() {
-        return this.imageHeight;
+    }public double getImageWidth() {
+        return imageWidth;
+    }public double getImageHeight() {
+        return imageHeight;
     }
 
 

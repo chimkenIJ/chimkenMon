@@ -5,7 +5,6 @@ public class Character {
     protected double x, y, xSpeed, ySpeed;
     protected int upDown;
     protected int hp, maxHP;
-    protected boolean alive;
     protected int special;
     protected static int frameRate = 60;
     protected int counter;
@@ -25,53 +24,7 @@ public class Character {
         lPose = 0;
     }
 
-    /*public void drawCharacter(PApplet game, PImage[] img, String name, boolean lBool) {
-        if(lBool) {
-            System.out.println(lBool);
-        }
-
-        if (name.equals("michael")) {
-            if (lBool) {
-                if (counter % 2 == 0) {
-                    game.image(img[4], (float) x, (float) y);
-                } else {
-                    game.image(img[5], (float) x, (float) y);
-                }
-                counter++;
-            } else {
-                game.image(img[0], (float) x, (float) y);
-            }
-        } else if (name.equals("leo")) {
-            if (lBool) {
-                if (counter % 2 == 0) {
-                    game.image(img[6], (float) x, (float) y);
-                } else {
-                    game.image(img[7], (float) x, (float) y);
-                }
-                counter++;
-            } else {
-                game.image(img[1], (float) x, (float) y);
-            }
-        }
-        else if (name.equals("finn")) {
-            if (lBool) {
-                    game.image(img[8], (float) x, (float) y);
-            } else {
-                game.image(img[2], (float) x, (float) y);
-            }
-        }
-        else if (name.equals("david")) {
-            if (lBool) {
-                game.image(img[9], (float) x, (float) y);
-            } else {
-                game.image(img[3], (float) x, (float) y);
-            }
-        }
-        else {
-            System.out.println("??");
-        }
-    }*/
-    public void drawCharacter(PApplet game, PImage[] img, String name, boolean lBool) {
+    public void drawCharacter(PApplet game, PImage[] img, String name) {
 
         if (lPose > 0) {
             counter++;
@@ -81,37 +34,41 @@ public class Character {
             lPose = 0;
         }
         if (counter > 0) {
-            if (counter % 2 == 0) {
+            if (counter % 4 == 0 || counter%4 == 1  ) {
                 lPose = 2;
             } else {
                 lPose = 1;
             }
         }
-        if (name.equals("michael")) {
-            game.image(img[0 + lPose], (float) x, (float) y);
-        } else if (name.equals("leo")) {
-            game.image(img[3 + lPose], (float) x, (float) y);
-        } else if (name.equals("finn")) {
-
-            game.image(img[6 + lPose], (float) x, (float) y);
-        } else if (name.equals("david")) {
-
-            game.image(img[9 + lPose], (float) x, (float) y);
-        } else {
-            System.out.println("??");
+        switch (name) {
+            case "michael":
+                game.image(img[lPose], (float) x, (float) y);
+                break;
+            case "leo":
+                game.image(img[3 + lPose], (float) x, (float) y);
+                break;
+            case "finn":
+                game.image(img[6 + lPose], (float) x, (float) y);
+                break;
+            case "david":
+                game.image(img[9 + lPose], (float) x, (float) y);
+                break;
+            default:
+                System.out.println("??");
+                break;
         }
     }
 
 
-    protected double getX(int time, int width) {
+    protected double getX(double time, int width) {
 
-        x = ((double) width / 2) + upDown * Math.cos((double) time / (2 * Math.PI));
+        x = ((double) width / 2) + upDown * Math.cos(time / (2 * Math.PI));
         return x;
 
     }
 
-    protected double getY(int time, int height) {
-        y = ((double) height / 2) - 200 + (upDown * Math.sin((double) time / (Math.PI * 2)));
+    protected double getY(double time, int height) {
+        y = ((double) height / 2) - 200 + (upDown * Math.sin(time / (Math.PI * 2)));
         return y;
 
     }
@@ -143,18 +100,15 @@ public class Character {
         return false;
     }
 
-    public boolean collide(Boss boss, int time, int width, int height) {
+    public boolean collide(Boss boss, double time, int width, int height) {
         double bossX = boss.getX();
         double charX = this.getX(time, width);
         double bossY = boss.getY();
         double charY = this.getY(time, height);
-        if (bossX <= this.getX(time,width) && (bossX + 170 >= charX )&& (bossY <= charY && bossY + 170 >= charY)) {
-            return true;
-        }
-        return false;
+        return bossX <= this.getX(time, width) && (bossX + 170 >= charX) && (bossY <= charY && bossY + 170 >= charY);
     }
 
-    public Bullet ability1(int time, int width, int height, boolean keyPressed, int key) {
+    public Bullet ability1(double time, int width, int height, boolean keyPressed, int key) {
         int go;
         if(this.getX(time,width)>500) {
             go = -10;
@@ -165,53 +119,35 @@ public class Character {
         return new Bullet(this.getX(time, width), this.getY(time, height), go, -10);
     }
 
-    public boolean ability2(String current, Boss boss, int time, int width, int height, int coolDown, boolean done) {
-        if (current.equals("michael") || current.equals("leo")) {
-            if (this.collide(boss, time, width, height)) {
-                this.lPose = 1;
-                return true;
-            }
-        } else if (current.equals("finn")) {
-            if (coolDown > (frameRate * 15)) {
-                this.special = 1;
-                this.lPose = 1;
-
-                return true;
-            }
-        } else if (current.equals("david")) {
-            if (!done) {
-                if (coolDown >= (frameRate * 15)) {
+    public boolean ability2(String current, Boss boss, double time, int width, int height, int coolDown, boolean done) {
+        switch (current) {
+            case "michael":
+            case "leo":
+                if (this.collide(boss, time, width, height)) {
+                    this.lPose = 1;
+                    return true;
+                }
+                break;
+            case "finn":
+                if (coolDown > (frameRate * 10)) {
                     this.special = 1;
                     this.lPose = 1;
 
                     return true;
                 }
-            }
+                break;
+            case "david":
+                if (!done) {
+                    if (coolDown >= (frameRate * 10)) {
+                        this.special = 1;
+                        this.lPose = 1;
+
+                        return true;
+                    }
+                }
+                break;
         }
         return false;
-    }
-
-
-    public void move(boolean keyPressed, int key) {
-        if (keyPressed) {
-            if (key == 'w') {
-                x += xSpeed;
-                y -= ySpeed;
-            }
-            if (key == 'a') {
-                x -= xSpeed;
-                y -= ySpeed;
-            }
-            if (key == 's') {
-                x -= xSpeed;
-                y += ySpeed;
-            }
-            if (key == 'd') {
-                x += xSpeed;
-                y += ySpeed;
-            }
-
-        }
     }
 
 
@@ -233,11 +169,24 @@ public class Character {
     public void setupDown(int incrDecr) {
         if (upDown + incrDecr > 0) {
             this.upDown += incrDecr;
+            this.y+=incrDecr;
         }
     }
 
     public int getupDown() {
         return this.upDown;
+    }
+
+    public void hpCharBar(PApplet game, Character current) {
+        game.stroke(235, 116, 108);
+        game.strokeWeight(0);
+        game.fill(135, 232, 102);
+        game.rect(400, 730,(float)(current.hp*200/current.maxHP), 25);
+        game.stroke(22);
+        game.strokeWeight(3);
+        game.fill(0, 0);
+        game.rect(400, 730, 200, 25);
+        game.strokeWeight(0);
     }
 }
 
