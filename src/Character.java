@@ -173,6 +173,9 @@ public class Character {
             this.y+=incrDecr;
         }
     }
+    public void setHP(int newHP) {
+        this.hp = newHP;
+    }
 
     public int getupDown() {
         return this.upDown;

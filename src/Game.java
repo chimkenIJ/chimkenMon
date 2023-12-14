@@ -3,6 +3,10 @@ import ddf.minim.Minim;
 import processing.core.PApplet;
 import processing.core.PImage;
 
+import javax.swing.*;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 
@@ -68,6 +72,8 @@ public class Game extends PApplet {
 
     Minim loader;
     AudioPlayer song;
+    String ans = "hh";
+
 
 
     public void settings() {
@@ -238,6 +244,21 @@ public class Game extends PApplet {
      */
     public void draw() {
         if (mode == Start1) {
+            if(ans.equals("hh")) {
+                ans = JOptionPane.showInputDialog("Load from previous saved state? (y/n) Write n if playing for the first time");
+            if(ans.equals("y)")) {
+                String arrH = readFile("healthData.txt");
+                String[] arr = arrH.split(", ");
+                for (int i = 0; i < 5; i++) {
+                    arr[i] = arr[i].trim();
+                }
+                michael.setHP(Integer.parseInt(arr[0]));
+                leo.setHP(Integer.parseInt(arr[1]));
+                finn.setHP(Integer.parseInt(arr[2]));
+                david.setHP(Integer.parseInt(arr[3]));
+                boss.setHP(Integer.parseInt(arr[4]));
+            }
+            }
             background(0);
             fill(255);
             textSize(33);
@@ -275,6 +296,7 @@ public class Game extends PApplet {
                 song.rewind();
                 song.play();
             }
+
 
             String name1 = current.toString();
             switch (name1) {
@@ -427,6 +449,12 @@ public class Game extends PApplet {
             }
 
             counter++;
+            String write = michael.getHP() + ", " + leo.getHP()+ ", " + finn.getHP() + ", " + david.getHP() + ", " + boss.getHP();
+            try {
+                writeDataToFile("healthData.txt", write);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
         }
 
@@ -538,6 +566,42 @@ public class Game extends PApplet {
             }
         }
     }
+    private static String readFile(String filePath) {
+        StringBuilder sb = new StringBuilder();
+
+        try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath))) {
+
+            String line = br.readLine();
+            while ( line != null) {
+                sb.append(line).append(System.getProperty("line.separator"));
+                line = br.readLine();
+            }
+
+        } catch (Exception errorObj) {
+            System.err.println("Couldn't read file: " + filePath);
+            errorObj.printStackTrace();
+        }
+
+        return sb.toString();
+    }
+    public static void writeDataToFile(String filePath, String data) throws IOException {
+        try (FileWriter f = new FileWriter(filePath)) {
+            try (BufferedWriter b = new BufferedWriter(f)) {
+                try (PrintWriter writer = new PrintWriter(b)) {
+
+
+                    writer.println(data);
+
+
+                }
+            }
+        } catch (IOException error) {
+            System.err.println("There was a problem writing to the file: " + filePath);
+            error.printStackTrace();
+        }
+    }
+
+
 
 
     public static void main(String[] args) {

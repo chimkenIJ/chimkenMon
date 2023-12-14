@@ -76,5 +76,9 @@ public class Boss {
     public int getHP() {
         return hp;
     }
+
+    public void setHP(int newHP) {
+        this.hp = newHP;
+    }
 }
 
